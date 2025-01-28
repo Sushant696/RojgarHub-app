@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Primary Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Blue Shades -->
+    <color name="blue_light">#FFADD8E6</color> <!-- Light Blue -->
+    <color name="blue_medium">#FF0000FF</color> <!-- Standard Blue -->
+    <color name="blue_dark">#FF00008B</color> <!-- Dark Blue -->
+    <color name="blue_accent">#FF007FFF</color> <!-- Accent Blue -->
+
+    <!-- Accent Colors -->
+    <color name="accent_orange">#FFFFA500</color> <!-- Orange -->
+    <color name="accent_teal">#FF008080</color> <!-- Teal -->
+    <color name="accent_purple">#FF800080</color> <!-- Purple -->
+
+    <!-- Gray Shades -->
+    <color name="gray_light">#FFD3D3D3</color> <!-- Light Gray -->
+    <color name="gray_medium">#FF808080</color> <!-- Medium Gray -->
+    <color name="gray_dark">#FF404040</color> <!-- Dark Gray -->
+
+    <!-- Additional Blues -->
+    <color name="blue_sky">#FF87CEEB</color> <!-- Sky Blue -->
+    <color name="blue_steel">#FF4682B4</color> <!-- Steel Blue -->
+    <color name="blue_navy">#FF000080</color> <!-- Navy Blue -->
 </resources>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "211247180309",
+    "project_id": "rojgarhub-26004",
+    "storage_bucket": "rojgarhub-26004.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211247180309:android:3d1cb16e642d039e177c1c",
+        "android_client_info": {
+          "package_name": "com.example.rojgarhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4sVOvIRXnGsf4PDPG8wfDqVdVe1V2i3k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
