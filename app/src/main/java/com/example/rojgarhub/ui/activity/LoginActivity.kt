@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnSignupnavigate.setOnClickListener {
+        binding.signupTab.setOnClickListener {
             val intent = Intent(this@LoginActivity,
                 Register::class.java)
             startActivity(intent)

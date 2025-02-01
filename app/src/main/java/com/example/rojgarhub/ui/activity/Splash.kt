@@ -1,4 +1,4 @@
-package com.example.rojgarhub
+package com.example.rojgarhub.ui.activity
 
 import android.content.Context
 import android.content.Intent
@@ -10,16 +10,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.rojgarhub.R
 import com.example.rojgarhub.ui.activity.LoginActivity
 import com.example.rojgarhub.ui.activity.Register
-
-class SplashActivity : AppCompatActivity() {
+class Splash : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_splash3)
+        setContentView(R.layout.activity_splash)
         sharedPreferences =
             getSharedPreferences(
                 "userData",
@@ -33,15 +33,14 @@ class SplashActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
 
-
             if (username.isEmpty()) {
                 val intent = Intent(
-                    this@SplashActivity, LoginActivity::class.java
+                    this@Splash, LoginActivity::class.java
                 )
                 startActivity(intent)
             } else {
                 val intent = Intent(
-                    this@SplashActivity,
+                    this@Splash,
                     Register::class.java
                 )
                 startActivity(intent)
