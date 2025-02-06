@@ -1,5 +1,6 @@
 package com.example.rojgarhub.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -15,9 +16,7 @@ import com.example.rojgarhub.viewModel.UserViewModel
 
 class Register : AppCompatActivity() {
     lateinit var binding: ActivityRegisterBinding
-
     lateinit var userViewModel: UserViewModel
-
     lateinit var loadingUtils: LoadingUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,15 +26,13 @@ class Register : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         val userRepository = UserRepositoryImpl()
 
         userViewModel = UserViewModel(userRepository)
 
         loadingUtils = LoadingUtils(this)
 
-        binding.signUp.setOnClickListener {
+        binding.createAcc.setOnClickListener {
             loadingUtils.show()
             var email: String = binding.registerEmail.text.toString()
             var password: String = binding.registerPassword.text.toString()
@@ -52,6 +49,10 @@ class Register : AppCompatActivity() {
                         email, fName, address, contact
                     )
                     addUser(userModel)
+                    Toast.makeText(this@Register,message, Toast.LENGTH_LONG).show()
+                    loadingUtils.dismiss()
+                    var intent = Intent(this@Register,LoginActivity::class.java)
+                    startActivity(intent)
                 }else{
                     loadingUtils.dismiss()
                     Toast.makeText(this@Register,
@@ -59,6 +60,13 @@ class Register : AppCompatActivity() {
                 }
 
            }
+        }
+
+
+        binding.login.setOnClickListener {
+            val intent = Intent(this@Register,
+                LoginActivity::class.java)
+            startActivity(intent)
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

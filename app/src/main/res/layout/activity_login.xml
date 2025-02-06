@@ -76,14 +76,17 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="-10dp"
         android:layout_weight="1"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardBackgroundColor="#F5F9FF">
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:cardBackgroundColor="#f9fcff"
+        app:cardCornerRadius="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 

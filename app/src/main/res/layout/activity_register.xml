@@ -48,7 +48,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/loginTab"
+                android:id="@+id/login"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -59,13 +59,13 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/signupTab"
+                android:id="@+id/register"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#2196F3"
                 android:gravity="center"
-                android:text="Signup"
+                android:text="Register"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -75,11 +75,12 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="-10dp"
         android:layout_weight="1"
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusTopStart="12dp"
-        app:cardBackgroundColor="#F5F9FF"
+        app:cardBackgroundColor="#f9fcff"
         app:cardCornerRadius="16dp">
 
         <!--        android:background="@drawable/card_background_top_rounded"-->
@@ -94,9 +95,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:boxCornerRadiusBottomEnd="1sp"
-                app:boxCornerRadiusBottomStart="1sp"
-
                 app:boxStrokeColor="#1565C0"
                 app:hintTextColor="#1565C0">
 
@@ -175,7 +173,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/signUp"
+                android:id="@+id/createAcc"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginBottom="16dp"
