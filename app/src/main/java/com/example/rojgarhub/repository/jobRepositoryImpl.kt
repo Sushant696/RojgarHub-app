@@ -34,7 +34,7 @@ class JobRepositoryImpl : JobRepository {
                         jobsList.add(it)
                     }
                 }
-                callback(jobsList, true, "Jobs fetched successfully")
+                callback(jobsList, true, "com.example.rojgarhub.ui.fragment.com.example.rojgarhub.ui.fragment.Jobs fetched successfully")
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -53,7 +53,7 @@ class JobRepositoryImpl : JobRepository {
                             jobsList.add(it)
                         }
                     }
-                    callback(jobsList, true, "Jobs fetched successfully")
+                    callback(jobsList, true, "com.example.rojgarhub.ui.fragment.com.example.rojgarhub.ui.fragment.Jobs fetched successfully")
                 }
 
                 override fun onCancelled(error: DatabaseError) {

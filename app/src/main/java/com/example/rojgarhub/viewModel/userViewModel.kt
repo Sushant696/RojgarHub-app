@@ -32,7 +32,7 @@ class UserViewModel(val repo: UserRepository) {
         get() = _userData
 
 
-    fun getUserFromDatabase(userId:String){
+    fun getUserFromDatabase(userId: String, param: (Any, Any, Any) -> Unit){
         repo.getUserFromDatabase(userId){
                 userModel,sucess,message->
             if(sucess){

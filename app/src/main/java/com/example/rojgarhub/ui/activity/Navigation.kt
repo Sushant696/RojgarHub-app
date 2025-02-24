@@ -14,7 +14,6 @@ import com.example.rojgarhub.ui.fragment.Home
 import com.example.rojgarhub.ui.fragment.Jobs
 import com.example.rojgarhub.ui.fragment.profile
 
-
 class NavigationActivity : AppCompatActivity() {
     lateinit var navigationBinding: ActivityNavigationBinding
 

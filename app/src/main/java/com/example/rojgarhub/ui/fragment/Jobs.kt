@@ -1,60 +1,107 @@
 package com.example.rojgarhub.ui.fragment
 
+import JobRepositoryImpl
+import JobViewModel
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.rojgarhub.R
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.rojgarhub.adapter.JobsAdapter
+import com.example.rojgarhub.databinding.FragmentJobsBinding
+import com.example.rojgarhub.model.JobModel
+import com.example.rojgarhub.model.UserModel
+import com.example.rojgarhub.repository.UserRepositoryImpl
+import com.example.rojgarhub.ui.activity.AddJobActivity
+import com.example.rojgarhub.ui.activity.JobDetailsActivity
+import com.example.rojgarhub.viewModel.UserViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [Jobs.newInstance] factory method to
- * create an instance of this fragment.
- */
 class Jobs : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentJobsBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var jobViewModel: JobViewModel
+    private lateinit var jobsAdapter: JobsAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentJobsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupViewModels()
+        setupRecyclerView()
+        observeUserAndLoadJobs()
+        setupClickListeners()
+    }
+
+    private fun setupViewModels() {
+        userViewModel = UserViewModel(UserRepositoryImpl())
+        jobViewModel = JobViewModel(JobRepositoryImpl())
+    }
+
+    private fun setupRecyclerView() {
+        jobsAdapter = JobsAdapter { job -> onJobClicked(job) }
+        binding.jobsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = jobsAdapter
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_jobs, container, false)
-    }
+    private fun observeUserAndLoadJobs() {
+        val currentUser = userViewModel.getCurrentUser()
+        if (currentUser != null) {
+            userViewModel.getUserFromDatabase(currentUser.uid) { user, success, message ->
+                if (success as Boolean && user is UserModel) {
+                    binding.fabAddJob.visibility = if (user.role == "employer") View.VISIBLE else View.GONE
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Jobs.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Jobs().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    if (user.role == "employer") {
+                        jobViewModel.getJobsByEmployer(user.userId)
+                    } else {
+                        jobViewModel.getAllJobs()
+                    }
                 }
             }
+        }
+
+        jobViewModel.jobs.observe(viewLifecycleOwner) { jobs ->
+            println("jobviewmodel.jobs.observer")
+            if (jobs.isEmpty()) {
+                binding.jobsRecyclerView.visibility = View.GONE
+                binding.tvNoJobs.visibility = View.VISIBLE
+            } else {
+                binding.jobsRecyclerView.visibility = View.VISIBLE
+                binding.tvNoJobs.visibility = View.GONE
+                jobsAdapter.submitList(jobs)
+            }
+        }
+    }
+
+    private fun setupClickListeners() {
+        binding.fabAddJob.setOnClickListener {
+            val intent = Intent(requireContext(), AddJobActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun onJobClicked(job: JobModel) {
+        val intent = Intent(requireContext(), JobDetailsActivity::class.java).apply {
+            putExtra("jobId", job.jobId)
+        }
+        startActivity(intent)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
