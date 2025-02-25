@@ -10,6 +10,7 @@ data class JobModel(
     val description: String = "",
     val location: String = "",
     val salary: String = "",
+    val companyName: String = "",
     val requirements: String = "",
     val postedDate: Long = System.currentTimeMillis()
 ) : Parcelable{
@@ -21,8 +22,10 @@ data class JobModel(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.readLong()
     )
+    constructor() : this("", "", "", "")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(jobId)

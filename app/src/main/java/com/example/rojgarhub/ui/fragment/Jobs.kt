@@ -1,20 +1,22 @@
 package com.example.rojgarhub.ui.fragment
 
-import JobRepositoryImpl
 import JobViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.rojgarhub.adapter.JobsAdapter
 import com.example.rojgarhub.databinding.FragmentJobsBinding
 import com.example.rojgarhub.model.JobModel
 import com.example.rojgarhub.model.UserModel
+import com.example.rojgarhub.repository.JobRepositoryImpl
 import com.example.rojgarhub.repository.UserRepositoryImpl
 import com.example.rojgarhub.ui.activity.AddJobActivity
+import com.example.rojgarhub.ui.activity.JobApplicationActivity
 import com.example.rojgarhub.ui.activity.JobDetailsActivity
 import com.example.rojgarhub.viewModel.UserViewModel
 
@@ -50,18 +52,33 @@ class Jobs : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        jobsAdapter = JobsAdapter { job -> onJobClicked(job) }
+        jobsAdapter = JobsAdapter(
+            onJobClicked = { job -> onJobClicked(job) },
+            onApplyClicked = { job -> startApplicationProcess(job) }
+        )
+
         binding.jobsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = jobsAdapter
         }
     }
 
+    private fun startApplicationProcess(job: JobModel) {
+        val intent = Intent(requireContext(), JobApplicationActivity::class.java).apply {
+            putExtra("jobId", job.jobId)
+            putExtra("jobTitle", job.title)
+        }
+        startActivity(intent)
+    }
+
     private fun observeUserAndLoadJobs() {
         val currentUser = userViewModel.getCurrentUser()
         if (currentUser != null) {
             userViewModel.getUserFromDatabase(currentUser.uid) { user, success, message ->
-                if (success as Boolean && user is UserModel) {
+                if (success && user is UserModel) {
+                    // Update adapter with user role
+                    jobsAdapter.userRole = user.role
+
                     binding.fabAddJob.visibility = if (user.role == "employer") View.VISIBLE else View.GONE
 
                     if (user.role == "employer") {
@@ -69,12 +86,13 @@ class Jobs : Fragment() {
                     } else {
                         jobViewModel.getAllJobs()
                     }
+                } else {
+                    binding.tvNoJobs.text = "Error loading user data: $message"
                 }
             }
         }
 
         jobViewModel.jobs.observe(viewLifecycleOwner) { jobs ->
-            println("jobviewmodel.jobs.observer")
             if (jobs.isEmpty()) {
                 binding.jobsRecyclerView.visibility = View.GONE
                 binding.tvNoJobs.visibility = View.VISIBLE
@@ -88,16 +106,37 @@ class Jobs : Fragment() {
 
     private fun setupClickListeners() {
         binding.fabAddJob.setOnClickListener {
-            val intent = Intent(requireContext(), AddJobActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(requireContext(), AddJobActivity::class.java))
         }
     }
 
     private fun onJobClicked(job: JobModel) {
-        val intent = Intent(requireContext(), JobDetailsActivity::class.java).apply {
+        Intent(requireContext(), JobDetailsActivity::class.java).apply {
             putExtra("jobId", job.jobId)
+            startActivity(this)
         }
-        startActivity(intent)
+    }
+
+    private fun onApplyClicked(job: JobModel) {
+        val currentUser = userViewModel.getCurrentUser()
+        if (currentUser != null) {
+            // Implement your application submission logic here
+            jobViewModel.applyForJob(job.jobId, currentUser.uid) { success, message ->
+                if (success as Boolean) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Successfully applied for ${job.title}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Application failed: $message",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

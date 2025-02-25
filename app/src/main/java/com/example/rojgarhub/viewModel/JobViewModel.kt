@@ -24,6 +24,11 @@ class JobViewModel(private val repo: JobRepository) {
         }
     }
 
+    fun applyForJob(jobId: String, userId: String, param: (Any, Any) -> Unit) {
+        repo.applyForJob(jobId, userId) { success, message ->
+        }
+    }
+
     fun getJobsByEmployer(employerId: String) {
         repo.getJobsByEmployer(employerId) { jobsList, success, message ->
             if (success) {
@@ -34,12 +39,15 @@ class JobViewModel(private val repo: JobRepository) {
         }
     }
 
-    fun getJobById(jobId: String) {
+    fun getJobById(
+        jobId: String,
+        callback: (JobModel?, Boolean, String) -> Unit
+    ) {
         repo.getJobById(jobId) { job, success, message ->
             _currentJob.value = job
+            callback(job, success, message)
         }
     }
-
     fun updateJob(jobId: String, data: MutableMap<String, Any>, callback: (Boolean, String) -> Unit) {
         repo.updateJob(jobId, data, callback)
     }

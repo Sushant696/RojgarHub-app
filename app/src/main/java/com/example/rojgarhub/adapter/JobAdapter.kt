@@ -1,6 +1,7 @@
 package com.example.rojgarhub.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -8,8 +9,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.rojgarhub.databinding.ItemJobBinding
 import com.example.rojgarhub.model.JobModel
 
-class JobsAdapter(private val onJobClicked: (JobModel) -> Unit) :
-    ListAdapter<JobModel, JobsAdapter.JobViewHolder>(JobDiffCallback()) {
+class JobsAdapter(
+    private val onJobClicked: (JobModel) -> Unit,
+    private val onApplyClicked: (JobModel) -> Unit
+) : ListAdapter<JobModel, JobsAdapter.JobViewHolder>(JobDiffCallback()) {
+
+    var userRole: String = "jobseeker" // Default to jobseeker
+
+    inner class JobViewHolder(private val binding: ItemJobBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(job: JobModel) {
+            binding.apply {
+                tvJobTitle.text = job.title
+                tvJobLocation.text = job.location
+                tvJobSalary.text = job.salary
+
+                // Show apply button only for jobseekers
+                btnApply.visibility = if (userRole == "jobseeker") View.VISIBLE else View.GONE
+
+                // Set click listeners
+                root.setOnClickListener { onJobClicked(job) }
+                btnApply.setOnClickListener { onApplyClicked(job) }
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JobViewHolder {
         val binding = ItemJobBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -19,17 +41,7 @@ class JobsAdapter(private val onJobClicked: (JobModel) -> Unit) :
     override fun onBindViewHolder(holder: JobViewHolder, position: Int) {
         val job = getItem(position)
         holder.bind(job)
-    }
 
-    inner class JobViewHolder(private val binding: ItemJobBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(job: JobModel) {
-            binding.apply {
-                tvJobTitle.text = job.title
-                tvJobLocation.text = job.location
-                tvJobSalary.text = job.salary
-                root.setOnClickListener { onJobClicked(job) }
-            }
-        }
     }
 
     class JobDiffCallback : DiffUtil.ItemCallback<JobModel>() {
