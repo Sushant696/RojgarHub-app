@@ -1,5 +1,6 @@
 package com.example.rojgarhub.repository
 
+import android.util.Log
 import com.example.rojgarhub.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -77,20 +78,25 @@ class UserRepositoryImpl : UserRepository {
         userId: String,
         callback: (UserModel?, Boolean, String) -> Unit
     ) {
-        reference.child(userId).addValueEventListener(object : ValueEventListener {
+        // Use addListenerForSingleValueEvent instead of addValueEventListener
+        reference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d("FIREBASE", "Snapshot: ${snapshot.value}")
                 if (snapshot.exists()) {
-                    var model = snapshot.getValue(UserModel::class.java)
-
-                    callback(model, true, "Details fetched successfully")
+                    val model = snapshot.getValue(UserModel::class.java)
+                    Log.d("FIREBASE", "Parsed model: $model")
+                    callback(model, true, "Success")
+                } else {
+                    callback(null, false, "User data not found")
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                callback(null, false, error.message)
+                callback(null, false, "Error: ${error.message}")
             }
         })
     }
+
 
     override fun logout(callback: (Boolean, String) -> Unit) {
         try {

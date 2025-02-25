@@ -8,11 +8,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.example.rojgarhub.ui.fragment.Profile
 import com.example.rojgarhub.R
 import com.example.rojgarhub.databinding.ActivityNavigationBinding
 import com.example.rojgarhub.ui.fragment.Home
 import com.example.rojgarhub.ui.fragment.Jobs
-import com.example.rojgarhub.ui.fragment.profile
 
 class NavigationActivity : AppCompatActivity() {
     lateinit var navigationBinding: ActivityNavigationBinding
@@ -37,7 +37,7 @@ class NavigationActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.menuHome -> replaceFragment(Home())
                 R.id.menuJobs -> replaceFragment(Jobs())
-                R.id.menuProfile -> replaceFragment(profile())
+                R.id.menuProfile -> replaceFragment(Profile())
                 else -> {}
             }
             true

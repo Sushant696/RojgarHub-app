@@ -34,39 +34,49 @@ class Register : AppCompatActivity() {
 
         binding.createAcc.setOnClickListener {
             loadingUtils.show()
-            var email: String = binding.registerEmail.text.toString()
-            var password: String = binding.registerPassword.text.toString()
-            var fName: String = binding.registerFname.text.toString()
-//            var lName: String = binding.registerLName.text.toString()
-            var address: String = binding.registerAddress.text.toString()
-            var contact: String = binding.registerContact.text.toString()
+            val email: String = binding.registerEmail.text.toString()
+            val password: String = binding.registerPassword.text.toString()
+            val username: String = binding.registerFname.text.toString()
+            val address: String = binding.registerAddress.text.toString()
+            val contact: String = binding.registerContact.text.toString()
 
-            userViewModel.signup(email,password){
-                    success,message,userId ->
-                if(success){
+            // Get selected role
+            val role = if (binding.radioJobSeeker.isChecked) "jobseeker" else "employer"
+
+            // Validate fields
+            if (email.isBlank() || password.isBlank() || username.isBlank()) {
+                loadingUtils.dismiss()
+                Toast.makeText(this@Register, "Please fill all required fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            userViewModel.signup(email, password) { success, message, userId ->
+                if (success) {
                     val userModel = UserModel(
-                        userId,
-                        email, fName, address, contact
+                        userId!!,
+                        email,
+                        username,
+                        address,
+                        contact,
+                        role
                     )
                     addUser(userModel)
-                    Toast.makeText(this@Register,message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@Register, message, Toast.LENGTH_LONG).show()
                     loadingUtils.dismiss()
-                    var intent = Intent(this@Register,LoginActivity::class.java)
+                    val intent = Intent(this@Register, LoginActivity::class.java)
                     startActivity(intent)
-                }else{
+                    finish() // Close the register activity
+                } else {
                     loadingUtils.dismiss()
-                    Toast.makeText(this@Register,
-                        message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@Register, message, Toast.LENGTH_SHORT).show()
                 }
-
-           }
+            }
         }
 
-
         binding.login.setOnClickListener {
-            val intent = Intent(this@Register,
-                LoginActivity::class.java)
+            val intent = Intent(this@Register, LoginActivity::class.java)
             startActivity(intent)
+            finish() // Close the register activity
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -76,16 +86,12 @@ class Register : AppCompatActivity() {
         }
     }
 
-
-    fun addUser(userModel: UserModel){
-        userViewModel.addUserToDatabase(userModel.userId,userModel){
-                success,message ->
-            if(success){
-                Toast.makeText(this@Register
-                    ,message, Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(this@Register
-                    ,message, Toast.LENGTH_SHORT).show()
+    fun addUser(userModel: UserModel) {
+        userViewModel.addUserToDatabase(userModel.userId, userModel) { success, message ->
+            if (success) {
+                Toast.makeText(this@Register, message, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@Register, message, Toast.LENGTH_SHORT).show()
             }
             loadingUtils.dismiss()
         }
