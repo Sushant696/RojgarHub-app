@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.rojgarhub.R
 import com.example.rojgarhub.adapter.JobsAdapter
 import com.example.rojgarhub.databinding.FragmentJobsBinding
 import com.example.rojgarhub.model.JobModel
@@ -71,39 +72,6 @@ class Jobs : Fragment() {
         startActivity(intent)
     }
 
-    private fun observeUserAndLoadJobs() {
-        val currentUser = userViewModel.getCurrentUser()
-        if (currentUser != null) {
-            userViewModel.getUserFromDatabase(currentUser.uid) { user, success, message ->
-                if (success && user is UserModel) {
-                    // Update adapter with user role
-                    jobsAdapter.userRole = user.role
-
-                    binding.fabAddJob.visibility = if (user.role == "employer") View.VISIBLE else View.GONE
-
-                    if (user.role == "employer") {
-                        jobViewModel.getJobsByEmployer(user.userId)
-                    } else {
-                        jobViewModel.getAllJobs()
-                    }
-                } else {
-                    binding.tvNoJobs.text = "Error loading user data: $message"
-                }
-            }
-        }
-
-        jobViewModel.jobs.observe(viewLifecycleOwner) { jobs ->
-            if (jobs.isEmpty()) {
-                binding.jobsRecyclerView.visibility = View.GONE
-                binding.tvNoJobs.visibility = View.VISIBLE
-            } else {
-                binding.jobsRecyclerView.visibility = View.VISIBLE
-                binding.tvNoJobs.visibility = View.GONE
-                jobsAdapter.submitList(jobs)
-            }
-        }
-    }
-
     private fun setupClickListeners() {
         binding.fabAddJob.setOnClickListener {
             startActivity(Intent(requireContext(), AddJobActivity::class.java))
@@ -120,7 +88,6 @@ class Jobs : Fragment() {
     private fun onApplyClicked(job: JobModel) {
         val currentUser = userViewModel.getCurrentUser()
         if (currentUser != null) {
-            // Implement your application submission logic here
             jobViewModel.applyForJob(job.jobId, currentUser.uid) { success, message ->
                 if (success as Boolean) {
                     Toast.makeText(
@@ -135,6 +102,67 @@ class Jobs : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+            }
+        }
+    }
+
+
+    private fun observeUserAndLoadJobs() {
+        val currentUser = userViewModel.getCurrentUser()
+
+        if (currentUser != null) {
+            binding.progressBarJobs.visibility = View.VISIBLE // Add a progress bar to your layout if not already there
+
+            userViewModel.getUserFromDatabase(currentUser.uid) { user, success, message ->
+                binding.progressBarJobs.visibility = View.GONE
+
+                if (success && user is UserModel) {
+                    // Update adapter with user role
+                    jobsAdapter.userRole = user.role
+                    binding.fabAddJob.visibility = if (user.role == "employer") View.VISIBLE else View.GONE
+
+                    if (user.role == "employer") {
+                        // Fix the TODO() issue by implementing the callback properly
+                        jobViewModel.getJobsByEmployer(user.userId) { jobs, success, message ->
+                            if (success) {
+                                // Handle success case - this will be handled by the LiveData observer
+                            } else {
+                                Toast.makeText(requireContext(), message.toString(), Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } else {
+                        jobViewModel.getAllJobs()
+                    }
+                } else {
+                    binding.tvNoJobs.visibility = View.VISIBLE
+                    binding.tvNoJobs.text = "Error loading user data: $message"
+                    binding.jobsRecyclerView.visibility = View.GONE
+                }
+            }
+        } else {
+            // Handle not logged in state
+            binding.tvNoJobs.visibility = View.VISIBLE
+            binding.tvNoJobs.text = "Please login to view jobs"
+            binding.jobsRecyclerView.visibility = View.GONE
+            binding.fabAddJob.visibility = View.GONE
+        }
+
+        jobViewModel.jobs.observe(viewLifecycleOwner) { jobs ->
+            binding.progressBarJobs.visibility = View.GONE
+
+            if (jobs.isEmpty()) {
+                binding.jobsRecyclerView.visibility = View.GONE
+                binding.tvNoJobs.visibility = View.VISIBLE
+
+                // Only set default "No jobs" message if there isn't already a specific message
+                if (binding.tvNoJobs.text.isNullOrEmpty() ||
+                    binding.tvNoJobs.text == getString(R.string.no_jobs_available)) {
+                    binding.tvNoJobs.text = "No jobs available"
+                }
+            } else {
+                binding.jobsRecyclerView.visibility = View.VISIBLE
+                binding.tvNoJobs.visibility = View.GONE
+                jobsAdapter.submitList(jobs)
             }
         }
     }

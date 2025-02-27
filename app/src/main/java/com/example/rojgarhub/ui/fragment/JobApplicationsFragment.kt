@@ -1,4 +1,3 @@
-// JobApplicationsFragment.kt
 package com.example.rojgarhub.ui.fragment
 
 import android.os.Bundle
@@ -35,35 +34,43 @@ class JobApplicationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViewModels()
-        setupRecyclerView()
-        loadApplications()
+//        setupRecyclerView()
+//        loadApplications()
         setupObservers()
     }
 
     private fun setupViewModels() {
         applicationViewModel = ApplicationViewModel(ApplicationRepositoryImpl())
     }
+//
+//    private fun setupRecyclerView() {
+//        applicationsAdapter = ApplicationsAdapter().apply {
+//            setOnStatusUpdateListener { application, newStatus ->
+//                applicationViewModel.updateApplicationStatus(
+//                    application.applicationId, newStatus
+//                )
+//            }
+//        }
+//
+//        binding.rvApplications.apply {
+//            layoutManager = LinearLayoutManager(requireContext())
+//            adapter = applicationsAdapter
+//        }
+//    }
 
-    private fun setupRecyclerView() {
-        applicationsAdapter = ApplicationsAdapter().apply {
-            setOnStatusUpdateListener { application, newStatus ->
-                applicationViewModel.updateApplicationStatus(
-                    application.applicationId, newStatus
-                )
-            }
-        }
-
-        binding.rvApplications.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = applicationsAdapter
-        }
-    }
-
-    private fun loadApplications() {
-        if (jobId.isNotEmpty()) {
-            applicationViewModel.getApplicationsByJob(jobId)
-        }
-    }
+//    private fun loadApplications() {
+//        if (jobId.isNotEmpty()) {
+//            applicationViewModel.getApplicationsByJob(jobId) { applications, appSuccess, appMessage ->
+//                binding.progressBar.visibility = View.GONE
+//
+//                if (appSuccess) {
+//                    updateApplicationsList(applications)
+//                } else {
+//                    Toast.makeText(requireContext(), appMessage, Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
+//    }
 
     private fun setupObservers() {
         applicationViewModel.applications.observe(viewLifecycleOwner) { applications ->

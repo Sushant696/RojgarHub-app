@@ -50,7 +50,7 @@ class ApplicationRepositoryImpl : ApplicationRepository {
         callback: (List<ApplicationModel>, Boolean, String) -> Unit
     ) {
         applicationsRef.orderByChild("userId").equalTo(userId)
-            .addValueEventListener(object : ValueEventListener {
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val applicationsList = mutableListOf<ApplicationModel>()
                     for (appSnapshot in snapshot.children) {
@@ -72,7 +72,7 @@ class ApplicationRepositoryImpl : ApplicationRepository {
         callback: (List<ApplicationModel>, Boolean, String) -> Unit
     ) {
         applicationsRef.orderByChild("jobId").equalTo(jobId)
-            .addValueEventListener(object : ValueEventListener {
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val applicationsList = mutableListOf<ApplicationModel>()
                     for (appSnapshot in snapshot.children) {

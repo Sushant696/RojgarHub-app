@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.rojgarhub.R
 import com.example.rojgarhub.adapter.ApplicationsAdapter
 import com.example.rojgarhub.databinding.FragmentMyApplicationsBinding
 import com.example.rojgarhub.repository.ApplicationRepositoryImpl
@@ -47,33 +46,54 @@ class MyApplicationsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        applicationsAdapter = ApplicationsAdapter()
+        // Add the required parameters to the adapter
+        applicationsAdapter = ApplicationsAdapter(
+            isEmployer = false,  // Set to appropriate value based on your app's logic
+            onStatusUpdate = { application, newStatus ->
+                // Implement status update logic here
+            }
+        )
+
         binding.rvApplications.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = applicationsAdapter
         }
     }
 
+
     private fun loadApplications() {
+        binding.progressBar.visibility = View.VISIBLE
+
         val currentUser = userViewModel.getCurrentUser()
         if (currentUser != null) {
+            // Don't pass a lambda here since getApplicationsByUser isn't using it properly
             applicationViewModel.getApplicationsByUser(currentUser.uid)
-        }
 
-        applicationViewModel.applications.observe(viewLifecycleOwner) { applications ->
-            if (applications.isEmpty()) {
-                binding.rvApplications.visibility = View.GONE
-                binding.tvNoApplications.visibility = View.VISIBLE
-            } else {
-                binding.rvApplications.visibility = View.VISIBLE
-                binding.tvNoApplications.visibility = View.GONE
-                applicationsAdapter.submitList(applications)
+            // Instead, observe the LiveData that gets updated
+            applicationViewModel.applications.observe(viewLifecycleOwner) { applications ->
+                binding.progressBar.visibility = View.GONE
+
+                if (applications.isEmpty()) {
+                    binding.rvApplications.visibility = View.GONE
+                    binding.tvNoApplications.visibility = View.VISIBLE
+                } else {
+                    binding.rvApplications.visibility = View.VISIBLE
+                    binding.tvNoApplications.visibility = View.GONE
+                    applicationsAdapter.submitList(applications)
+                }
             }
-        }
 
-        applicationViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
-            Toast.makeText(requireContext(), message ?: "Unknown error", Toast.LENGTH_SHORT).show()
+            applicationViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(requireContext(), message ?: "Unknown error", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        } else {
+            binding.progressBar.visibility = View.GONE
+            binding.rvApplications.visibility = View.GONE
+            binding.tvNoApplications.visibility = View.VISIBLE
         }
     }
+
 
 }

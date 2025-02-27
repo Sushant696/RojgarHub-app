@@ -14,7 +14,7 @@ class JobsAdapter(
     private val onApplyClicked: (JobModel) -> Unit
 ) : ListAdapter<JobModel, JobsAdapter.JobViewHolder>(JobDiffCallback()) {
 
-    var userRole: String = "jobseeker" // Default to jobseeker
+    var userRole: String = "jobseeker"
 
     inner class JobViewHolder(private val binding: ItemJobBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(job: JobModel) {

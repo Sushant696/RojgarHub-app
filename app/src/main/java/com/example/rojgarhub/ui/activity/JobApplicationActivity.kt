@@ -3,7 +3,6 @@ package com.example.rojgarhub.ui.activity
 import JobViewModel
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.rojgarhub.databinding.ActivityJobApplicationBinding
@@ -29,9 +28,7 @@ class JobApplicationActivity : AppCompatActivity() {
         binding = ActivityJobApplicationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Remove all file upload related views from your XML
-        binding.btnUploadCv.visibility = View.GONE
-        binding.tvSelectedFile.visibility = View.GONE
+
 
         jobId = intent.getStringExtra("jobId") ?: ""
         if (jobId.isEmpty()) {

@@ -29,14 +29,8 @@ class JobViewModel(private val repo: JobRepository) {
         }
     }
 
-    fun getJobsByEmployer(employerId: String) {
-        repo.getJobsByEmployer(employerId) { jobsList, success, message ->
-            if (success) {
-                _jobs.value = jobsList
-            } else {
-                _jobs.value = emptyList()
-            }
-        }
+    fun getJobsByEmployer(employerId: String, callback: (List<JobModel>, Boolean, String) -> Unit) {
+        repo.getJobsByEmployer(employerId, callback)
     }
 
     fun getJobById(

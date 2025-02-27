@@ -101,27 +101,6 @@
                 android:gravity="top" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:id="@+id/tvCvStatus"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Upload your CV (PDF)"
-                android:layout_gravity="center_vertical" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnUploadCv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Choose File"
-                app:icon="@android:drawable/ic_menu_upload" />
-        </LinearLayout>
 
         <TextView
             android:id="@+id/tvSelectedFile"

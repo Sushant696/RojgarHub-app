@@ -11,21 +11,19 @@ data class ApplicationModel(
     val applicantName: String = "",
     val applicantEmail: String = "",
     val applicantPhone: String = "",
-    val coverLetter: String = "",  // Added coverLetter field
     val applicationDate: Long = System.currentTimeMillis(),
     val status: String = "pending"
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString().toString(),
-        parcel.readString().toString(),
-        parcel.readString().toString(),
-        parcel.readString().toString(),
-        parcel.readString().toString(),
-        parcel.readString().toString(),
-        parcel.readString().toString(),
-        parcel.readString().toString(),  // Read coverLetter
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.readLong(),
-        parcel.readString().toString()
+        parcel.readString() ?: "pending"
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -36,7 +34,6 @@ data class ApplicationModel(
         parcel.writeString(applicantName)
         parcel.writeString(applicantEmail)
         parcel.writeString(applicantPhone)
-        parcel.writeString(coverLetter)  // Write coverLetter
         parcel.writeLong(applicationDate)
         parcel.writeString(status)
     }

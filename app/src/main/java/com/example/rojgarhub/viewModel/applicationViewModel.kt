@@ -31,7 +31,7 @@ class ApplicationViewModel(private val repository: ApplicationRepository) : View
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
-    fun getApplicationsByJob(jobId: String) {
+    fun getApplicationsByJob(jobId: String, param: (Any, Any, Any) -> Unit) {
         repository.getApplicationsByJob(jobId) { applications, success, message ->
             if (success) {
                 _applications.value = applications
@@ -41,28 +41,28 @@ class ApplicationViewModel(private val repository: ApplicationRepository) : View
         }
     }
 
-    fun getApplicationsByUser(userId: String) {
+    fun getApplicationsByUser(
+        userId: String
+    ) {
         repository.getApplicationsByUser(userId) { applications, success, message ->
             if (success) {
-                _applications.value = applications
+                _applications.postValue(applications)
             } else {
-                _applications.value = emptyList()
+                _applications.postValue(emptyList())
+                _errorMessage.postValue(message)
             }
+//            callback(applications, success, message)
         }
     }
 
 
-    fun updateApplicationStatus(applicationId: String, status: String) {
-        _applicationStatus.value = Resource.Loading()
-        repository.updateApplicationStatus(applicationId, status) { success, message ->
-            if (success) {
-                _applicationStatus.value = Resource.Success(message)
-            } else {
-                _applicationStatus.value = Resource.Error(message)
-            }
-        }
+    fun updateApplicationStatus(
+        applicationId: String,
+        status: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        repository.updateApplicationStatus(applicationId, status, callback)
     }
-
 
     // Resource class for handling states
     sealed class Resource<T>(

@@ -13,7 +13,6 @@ import com.example.rojgarhub.R
 import com.example.rojgarhub.databinding.ActivityNavigationBinding
 import com.example.rojgarhub.ui.fragment.Home
 import com.example.rojgarhub.ui.fragment.Jobs
-import com.example.rojgarhub.ui.fragment.MyApplicationsFragment
 
 class NavigationActivity : AppCompatActivity() {
     lateinit var navigationBinding: ActivityNavigationBinding
@@ -38,7 +37,6 @@ class NavigationActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.menuHome -> replaceFragment(Home())
                 R.id.menuJobs -> replaceFragment(Jobs())
-                R.id.menuApplications -> replaceFragment(MyApplicationsFragment())
                 R.id.menuProfile -> replaceFragment(Profile())
                 else -> {}
             }
