@@ -1,6 +1,6 @@
 package com.example.rojgarhub.ui.activity
 
-import JobViewModel
+import com.example.rojgarhub.viewModel.JobViewModel
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast

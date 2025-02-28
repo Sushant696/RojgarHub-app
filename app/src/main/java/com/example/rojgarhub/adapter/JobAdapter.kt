@@ -23,10 +23,8 @@ class JobsAdapter(
                 tvJobLocation.text = job.location
                 tvJobSalary.text = job.salary
 
-                // Show apply button only for jobseekers
                 btnApply.visibility = if (userRole == "jobseeker") View.VISIBLE else View.GONE
 
-                // Set click listeners
                 root.setOnClickListener { onJobClicked(job) }
                 btnApply.setOnClickListener { onApplyClicked(job) }
             }

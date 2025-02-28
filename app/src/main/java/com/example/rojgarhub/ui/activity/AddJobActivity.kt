@@ -1,7 +1,7 @@
 package com.example.rojgarhub.ui.activity
 
-
-import JobViewModel
+import android.content.Intent
+import com.example.rojgarhub.viewModel.JobViewModel
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -52,11 +52,11 @@ class AddJobActivity : AppCompatActivity() {
         val salary = binding.etJobSalary.text.toString()
         val requirements = binding.etJobRequirements.text.toString()
 
-        if (validateInputs()) {
+        if (validateInputs(title, description, location)) {
             loadingUtils.show()
 
             val currentUser = userViewModel.getCurrentUser()
-            if (currentUser != null) {
+            if (currentUser?.uid != null) {
                 val jobModel = JobModel(
                     employerId = currentUser.uid,
                     title = title,
@@ -68,17 +68,41 @@ class AddJobActivity : AppCompatActivity() {
 
                 jobViewModel.postJob(jobModel) { success, message ->
                     loadingUtils.dismiss()
-                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+                    Toast.makeText(this, message ?: "Job posted successfully", Toast.LENGTH_SHORT).show()
+
                     if (success) {
-                        finish()
+                        binding.root.postDelayed({
+                            val resultIntent = Intent()
+                            resultIntent.putExtra("stayOnJobs", true)
+                            setResult(RESULT_OK, resultIntent)
+                            finish()
+                        }, 500)
                     }
                 }
+            } else {
+                loadingUtils.dismiss()
+                Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun validateInputs(): Boolean {
-        // Add your validation logic here
+    private fun validateInputs(title: String, description: String, location: String): Boolean {
+        if (title.isBlank()) {
+            binding.etJobTitle.error = "Title is required"
+            return false
+        }
+
+        if (description.isBlank()) {
+            binding.etJobDescription.error = "Description is required"
+            return false
+        }
+
+        if (location.isBlank()) {
+            binding.etJobLocation.error = "Location is required"
+            return false
+        }
+
         return true
     }
 

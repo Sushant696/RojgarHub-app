@@ -29,7 +29,6 @@ class LoginActivity : AppCompatActivity() {
         var repo = UserRepositoryImpl()
         userViewModel = UserViewModel(repo)
 
-        //initializing loading
         loadingUtils = LoadingUtils(this)
 
         binding.btnLogin.setOnClickListener {
@@ -60,12 +59,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Todo forgot password code
-//        binding.btnForget.setOnClickListener {
-//            val intent = Intent(this@LoginActivity,
-//                ForgetPasswordActivity::class.java)
-//            startActivity(intent)
-//        }
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

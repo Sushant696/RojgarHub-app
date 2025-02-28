@@ -43,6 +43,12 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
+    fun fetchUser(userId: String) {
+        getUserFromDatabase(userId) { user, success, _ ->
+            if (success) _userData.postValue(user)
+        }
+    }
+
     fun forgetPassword(email: String, callback: (Boolean, String) -> Unit) {
         _loading.value = true
         repository.forgetPassword(email) { success, message ->

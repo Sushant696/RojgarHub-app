@@ -1,36 +1,40 @@
+package com.example.rojgarhub.viewModel
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.rojgarhub.model.JobModel
 import com.example.rojgarhub.repository.JobRepository
 
 class JobViewModel(private val repo: JobRepository) {
-    private val _jobs = MutableLiveData<List<JobModel>>()
-    val jobs: LiveData<List<JobModel>> = _jobs
 
+    private val _jobs = MutableLiveData<List<JobModel>>()
+    val jobs: LiveData<List<JobModel>> get() = _jobs
     private val _currentJob = MutableLiveData<JobModel?>()
     val currentJob: LiveData<JobModel?> = _currentJob
 
-    fun postJob(jobModel: JobModel, callback: (Boolean, String) -> Unit) {
-        repo.postJob(jobModel, callback)
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> get() = _errorMessage
+
+    fun updateJobsLiveData(jobsList: List<JobModel>) {
+        _jobs.postValue(jobsList)
     }
 
     fun getAllJobs() {
-        repo.getAllJobs { jobsList, success, message ->
+        repo.getAllJobs { jobs, success, message ->
             if (success) {
-                _jobs.value = jobsList
+                _jobs.postValue(jobs as List<JobModel>)
             } else {
-                _jobs.value = emptyList()
+                _errorMessage.postValue(message.toString())
             }
         }
     }
 
-    fun applyForJob(jobId: String, userId: String, param: (Any, Any) -> Unit) {
-        repo.applyForJob(jobId, userId) { success, message ->
-        }
+    fun getJobsByEmployer(employerId: String, callback: (Any?, Boolean, String?) -> Unit) {
+        repo.getJobsByEmployer(employerId, callback)
     }
 
-    fun getJobsByEmployer(employerId: String, callback: (List<JobModel>, Boolean, String) -> Unit) {
-        repo.getJobsByEmployer(employerId, callback)
+    fun postJob(jobModel: JobModel, callback: (Boolean, String?) -> Unit) {
+        repo.postJob(jobModel, callback)
     }
 
     fun getJobById(

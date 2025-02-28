@@ -27,7 +27,6 @@ class EditProfileActivity : AppCompatActivity() {
         userViewModel = UserViewModel(userRepository)
         loadingUtils = LoadingUtils(this)
 
-        // Get current user data from intent
         currentUser = intent.getParcelableExtra("USER_DATA")
 
         if (currentUser == null) {
@@ -36,10 +35,8 @@ class EditProfileActivity : AppCompatActivity() {
             return
         }
 
-        // Populate fields with current data
         populateFields()
 
-        // Set up button listeners
         binding.btnSave.setOnClickListener {
             saveChanges()
         }
@@ -55,7 +52,6 @@ class EditProfileActivity : AppCompatActivity() {
             binding.editAddress.setText(user.address)
             binding.editPhone.setText(user.phoneNumber)
 
-            // Set role radio button
             if (user.role == "employer") {
                 binding.radioEmployer.isChecked = true
             } else {

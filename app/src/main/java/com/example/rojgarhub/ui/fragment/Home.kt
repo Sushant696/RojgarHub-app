@@ -1,6 +1,6 @@
 package com.example.rojgarhub.ui.fragment
 
-import JobViewModel
+import com.example.rojgarhub.viewModel.JobViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -131,7 +131,10 @@ class Home : Fragment() {
         }
     }
 
+
+
     private fun loadJobSeekerApplications(userId: String) {
+        if (_binding == null) return
         binding.progressBar.visibility = View.VISIBLE
 
         applicationViewModel.getApplicationsByUser(userId)
@@ -139,17 +142,22 @@ class Home : Fragment() {
 
 
     private fun loadEmployerApplications(employerId: String) {
+        if (_binding == null) return
         binding.progressBar.visibility = View.VISIBLE
-        applicationViewModel.getApplicationsByUser(employerId)
+
+        // For employers, we should get applications through their jobs
+        // Comment out or remove this line as it might be causing conflicts
+        // applicationViewModel.getApplicationsByUser(employerId)
 
         jobViewModel.getJobsByEmployer(employerId) { jobs, success, message ->
-            binding.progressBar.visibility = View.GONE
+            if (_binding == null) return@getJobsByEmployer
 
             if (success as Boolean) {
                 // Explicitly cast jobs to List<JobModel> to help type inference
                 val typedJobs = jobs as List<JobModel>
 
                 if (typedJobs.isEmpty()) {
+                    binding.progressBar.visibility = View.GONE
                     updateApplicationsList(emptyList())
                     return@getJobsByEmployer
                 }
@@ -159,37 +167,53 @@ class Home : Fragment() {
 
                 typedJobs.forEach { job ->
                     applicationViewModel.getApplicationsByJob(job.jobId) { applications, appSuccess, _ ->
+                        if (_binding == null) return@getApplicationsByJob
+
                         loadedJobCount++
 
                         if (appSuccess as Boolean) {
-                            // Explicitly cast applications to help type inference
                             val typedApplications = applications as List<ApplicationModel>
                             allApplications.addAll(typedApplications)
                         }
 
-                        // Check if this is the last job being processed
+                        // Only update UI when all jobs have been processed
                         if (loadedJobCount == typedJobs.size) {
+                            binding.progressBar.visibility = View.GONE
                             updateApplicationsList(allApplications.sortedByDescending { it.applicationDate })
                         }
                     }
                 }
             } else {
-                Toast.makeText(requireContext(), message.toString(), Toast.LENGTH_SHORT).show()
+                binding.progressBar.visibility = View.GONE
+                if (_binding != null) {
+                    Toast.makeText(requireContext(), message.toString(), Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
+
     private fun updateApplicationsList(applications: List<ApplicationModel>) {
-        if (applications.isEmpty()) {
+        if (_binding == null) return
+
+        val displayApplications = if (currentUser?.role == "employer") {
+            // For employers, we might want to show all applications
+            applications
+        } else {
+            applications.filter { it.userId == currentUser?.userId }
+        }
+
+        if (displayApplications.isEmpty()) {
             showEmptyState()
         } else {
-            applicationsAdapter.submitList(applications.take(3))
+            applicationsAdapter.submitList(displayApplications)
             binding.rvRecentApplications.visibility = View.VISIBLE
             binding.tvNoApplications.visibility = View.GONE
         }
     }
 
     private fun showEmptyState() {
+        if (_binding == null) return
         binding.rvRecentApplications.visibility = View.GONE
         binding.tvNoApplications.visibility = View.VISIBLE
         binding.tvNoApplications.text = when (currentUser?.role) {
@@ -208,6 +232,8 @@ class Home : Fragment() {
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

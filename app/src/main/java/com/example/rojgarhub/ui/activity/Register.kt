@@ -76,7 +76,7 @@ class Register : AppCompatActivity() {
         binding.login.setOnClickListener {
             val intent = Intent(this@Register, LoginActivity::class.java)
             startActivity(intent)
-            finish() // Close the register activity
+            finish()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

@@ -31,12 +31,18 @@ class ApplicationViewModel(private val repository: ApplicationRepository) : View
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
-    fun getApplicationsByJob(jobId: String, param: (Any, Any, Any) -> Unit) {
+    fun getApplicationsByJob(jobId: String, callback: (List<ApplicationModel>, Boolean, String?) -> Unit) {
         repository.getApplicationsByJob(jobId) { applications, success, message ->
             if (success) {
+                // Update LiveData
                 _applications.value = applications
+                // Call the callback with the applications
+                callback(applications, success, message)
             } else {
+                // Update LiveData with empty list
                 _applications.value = emptyList()
+                // Call the callback with empty list
+                callback(emptyList(), success, message)
             }
         }
     }
@@ -51,7 +57,6 @@ class ApplicationViewModel(private val repository: ApplicationRepository) : View
                 _applications.postValue(emptyList())
                 _errorMessage.postValue(message)
             }
-//            callback(applications, success, message)
         }
     }
 
