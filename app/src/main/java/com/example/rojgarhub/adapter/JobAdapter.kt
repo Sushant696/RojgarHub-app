@@ -11,12 +11,14 @@ import com.example.rojgarhub.model.JobModel
 
 class JobsAdapter(
     private val onJobClicked: (JobModel) -> Unit,
-    private val onApplyClicked: (JobModel) -> Unit
+    private val onApplyClicked: (JobModel) -> Unit,
+    private val onDeleteClicked: (JobModel) -> Unit
 ) : ListAdapter<JobModel, JobsAdapter.JobViewHolder>(JobDiffCallback()) {
 
     var userRole: String = "jobseeker"
 
-    inner class JobViewHolder(private val binding: ItemJobBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class JobViewHolder(private val binding: ItemJobBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(job: JobModel) {
             binding.apply {
                 tvJobTitle.text = job.title
@@ -24,9 +26,12 @@ class JobsAdapter(
                 tvJobSalary.text = job.salary
 
                 btnApply.visibility = if (userRole == "jobseeker") View.VISIBLE else View.GONE
+                btnDelete.visibility = if (userRole == "employer") View.VISIBLE else View.GONE
 
                 root.setOnClickListener { onJobClicked(job) }
                 btnApply.setOnClickListener { onApplyClicked(job) }
+                btnDelete.setOnClickListener { onDeleteClicked(job) }
+
             }
         }
     }

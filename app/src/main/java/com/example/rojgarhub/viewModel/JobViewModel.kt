@@ -22,7 +22,9 @@ class JobViewModel(private val repo: JobRepository) {
     fun getAllJobs() {
         repo.getAllJobs { jobs, success, message ->
             if (success) {
-                _jobs.postValue(jobs as List<JobModel>)
+                _jobs.postValue(jobs as List<JobModel>
+
+                )
             } else {
                 _errorMessage.postValue(message.toString())
             }

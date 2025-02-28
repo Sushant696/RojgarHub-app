@@ -37,16 +37,16 @@ class Jobs : Fragment() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            // Job was added successfully, reload jobs
             currentUser?.let { loadJobs(it) }
 
-            // Check if we need to explicitly stay on Jobs
             val stayOnJobs = result.data?.getBooleanExtra("stayOnJobs", false) ?: false
             if (stayOnJobs) {
-                requireActivity().findViewById<BottomNavigationView>(R.id.buttomNavigation)?.selectedItemId = R.id.menuJobs
+                requireActivity().findViewById<BottomNavigationView>(R.id.buttomNavigation)?.selectedItemId =
+                    R.id.menuJobs
             }
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,7 +69,8 @@ class Jobs : Fragment() {
     private fun setupObservers() {
         jobViewModel.jobs.observe(viewLifecycleOwner) { jobs ->
             if (_binding != null) {
-                jobsAdapter.submitList(jobs)
+                val sortedJobs = jobs.sortedByDescending { it.postedDate }
+                jobsAdapter.submitList(sortedJobs)
                 binding.jobsRecyclerView.visibility = View.VISIBLE
                 binding.progressBarJobs?.visibility = View.GONE
             }
@@ -91,13 +92,26 @@ class Jobs : Fragment() {
     private fun setupRecyclerView() {
         jobsAdapter = JobsAdapter(
             onJobClicked = { job -> onJobClicked(job) },
-            onApplyClicked = { job -> startApplicationProcess(job) }
+            onApplyClicked = { job -> startApplicationProcess(job) },
+            onDeleteClicked = { job -> deleteJob(job) }
+
         )
         binding.jobsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = jobsAdapter
         }
     }
+    private fun deleteJob(job: JobModel) {
+        jobViewModel.deleteJob(job.jobId) { success, message ->
+            if (success) {
+                currentUser?.let { loadJobs(it) }
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Delete failed: $message", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
     private fun setupClickListeners() {
         binding.fabAddJob.setOnClickListener {
@@ -120,6 +134,8 @@ class Jobs : Fragment() {
         }
         startActivity(intent)
     }
+
+
 
     private fun observeUserAndLoadJobs() {
         val currentUser = userViewModel.getCurrentUser()

@@ -1,50 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Job Title -->
         <TextView
             android:id="@+id/tvJobTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/design_default_color_primary_dark"
             android:textSize="18sp"
-            android:text="title"
-            android:textStyle="bold" />
+            app:fontFamily="sans-serif-medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Senior Android Developer" />
 
+        <!-- Location -->
         <TextView
             android:id="@+id/tvJobLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="location"
-            android:layout_marginTop="4dp" />
-
-        <TextView
-            android:id="@+id/tvJobSalary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="salary"
-            android:layout_marginTop="4dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnApply"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Apply"
-            android:visibility="gone"
+            android:drawablePadding="4dp"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            android:textSize="14sp"
+            app:drawableTint="@color/material_on_surface_emphasis_medium"
+            app:fontFamily="sans-serif"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvJobSalary" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvJobTitle"
+            tools:text="Kathmandu, Nepal" />
 
-    </LinearLayout>
+        <!-- Salary -->
+        <TextView
+            android:id="@+id/tvJobSalary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawablePadding="4dp"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            android:textSize="14sp"
+            app:drawableTint="@color/material_on_surface_emphasis_medium"
+            app:fontFamily="sans-serif"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvJobLocation"
+            tools:text="NPR 80,000 - 1,20,000" />
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="end"
+            app:layout_constraintTop_toBottomOf="@id/tvJobSalary">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnApply"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Apply"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:iconPadding="4dp"
+                app:iconTint="@color/design_default_color_primary"
+                app:strokeColor="@color/design_default_color_primary"
+                app:strokeWidth="1dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDelete"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Delete"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:icon="@drawable/delete"
+                app:iconPadding="4dp"
+                app:iconTint="@color/material_color_error"
+                app:strokeColor="@color/material_color_error"
+                app:strokeWidth="1dp" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

@@ -20,7 +20,10 @@
     <color name="gray_medium">#FF808080</color> <!-- Medium Gray -->
     <color name="gray_dark">#FF404040</color> <!-- Dark Gray -->
 
-
+    <color name="design_default_color_primary">#6750A4</color>
+    <color name="design_default_color_primary_dark">#1A237E</color>
+    <color name="material_on_surface_emphasis_medium">#666666</color>
+    <color name="material_color_error">#B00020</color>
     <!-- colors.xml -->
     <color name="blue_medium" tools:ignore="DuplicateDefinition">#1E88E5</color>
     <color name="text_primary">#212121</color>

@@ -93,7 +93,6 @@ class Home : Fragment() {
             notLoggedInMessage.visibility = View.VISIBLE
             rvRecentApplications.visibility = View.GONE
             applicationsSectionTitle.visibility = View.GONE
-            btnViewAll.visibility = View.GONE
         }
     }
 
@@ -106,7 +105,6 @@ class Home : Fragment() {
             }
             userTypeSection.visibility = View.VISIBLE
             applicationsSectionTitle.visibility = View.VISIBLE
-            btnViewAll.visibility = View.VISIBLE
         }
 
         applicationsAdapter =
@@ -197,11 +195,14 @@ class Home : Fragment() {
         if (_binding == null) return
 
         val displayApplications = if (currentUser?.role == "employer") {
-            // For employers, we might want to show all applications
-            applications
+            // For employers, show all applications sorted by date (newest first)
+            applications.sortedByDescending { it.applicationDate }
         } else {
+            // For job seekers, filter by the user who applied and sort by date
             applications.filter { it.userId == currentUser?.userId }
+                .sortedByDescending { it.applicationDate }
         }
+
 
         if (displayApplications.isEmpty()) {
             showEmptyState()
