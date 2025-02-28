@@ -109,13 +109,14 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
+
                 android:id="@+id/btnSubmitJob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Post Job"
                 android:padding="12dp"
-                android:backgroundTint="#2196F3"
+                    android:backgroundTint="#2196F3"
                 app:cornerRadius="8dp" />
 
         </LinearLayout>
