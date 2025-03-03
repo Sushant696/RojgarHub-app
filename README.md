@@ -18,7 +18,6 @@ A simple Android app built using Kotlin to fetch and display job listings from a
 
 ## Future Enhancements
 
-- Add user authentication for secure job applications.
 - Allow users to save jobs for later.
 - Add notifications for new job postings.
 
